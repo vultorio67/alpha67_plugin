@@ -1,18 +1,26 @@
-package com.vultorio.alpha67.events;
+package com.vultorio.Alpha67.events;
 
-import com.vultorio.alpha67.Alpha67;
+import com.archyx.aureliumskills.api.AureliumAPI;
+import com.archyx.aureliumskills.skills.Skills;
+
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.vultorio.Alpha67.Alpha67;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class OnBlockBreak implements Listener {
 
@@ -21,6 +29,12 @@ public class OnBlockBreak implements Listener {
     {
         Block block = e.getBlock();
         Player player = e.getPlayer();
+
+        //AureliumAPI.addXp(player, Skills.EXCAVATION, 6000);
+
+
+        //System.out.println(Alpha67.econ.getBalance(player));
+        //Alpha67.econ.depositPlayer(player, 100);
 
         Material cropBlockType = null;
 

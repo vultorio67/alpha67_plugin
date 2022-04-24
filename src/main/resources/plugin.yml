@@ -1,8 +1,10 @@
-name: Alpha67
-version: ${project.version}
-main: com.vultorio.alpha67.Alpha67
-api-version: 1.17
-prefix: Alpha
-authors: [ Vulttorio ]
-description: Ce plugin est programmé specialement pour le server alpha67.
-website: https://www.youtube.com/channel/UCCCVg5MTPNbMx0aTO3bDi0Q
+name: Alpha67_plugin
+version: '${version}'
+main: com.vultorio.Alpha67.Alpha67
+api-version: 1.16
+authors: [ vultorio ]
+commands:
+  mod:
+    description: display the mod by system
+    usage: /<command>
+
