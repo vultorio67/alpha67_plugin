@@ -1,30 +1,27 @@
 package com.vultorio.Alpha67;
 
 import com.vultorio.Alpha67.commands.modMenu;
-import com.vultorio.Alpha67.data.Data;
-import com.vultorio.Alpha67.data.dataProvider;
-import com.vultorio.Alpha67.events.OnBlockBreak;
-import com.vultorio.Alpha67.events.OnPlayerConnect;
-import com.vultorio.Alpha67.events.Oncraft;
+import com.vultorio.Alpha67.data.serverData;
+import com.vultorio.Alpha67.events.*;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
+import com.vultorio.Alpha67.sync.syncronisation;
+import org.json.simple.parser.ParseException;
 
 
 public final class Alpha67 extends JavaPlugin implements Listener {
@@ -40,7 +37,8 @@ public final class Alpha67 extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
 
-        createCustomConfig();
+        //serverData.saveServerData();
+        syncronisation.sync();
 
         //new Data(Alpha67.getPlugin(Alpha67.class), "ohai.yml").set("one", "ThreadLocalRandom().current().nextInt()").set("two", "ThreadLocalRandom().current().nextInt()").set("three", "ThreadLocalRandom().current().nextInt()").set("four", "I am you're father").set("five", "You*re").save();
 
@@ -63,7 +61,24 @@ public final class Alpha67 extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new OnBlockBreak(), instance);
         getServer().getPluginManager().registerEvents(new Oncraft(), instance);
         getServer().getPluginManager().registerEvents(new OnPlayerConnect(), instance);
+        getServer().getPluginManager().registerEvents(new OnItemPickup(), instance);
+        getServer().getPluginManager().registerEvents(new OnBlockPlace(), instance);
         getCommand("mod").setExecutor(new modMenu());
+
+        getServer().getScheduler().scheduleSyncRepeatingTask(instance, new Runnable(){
+            public void run() {
+
+                for(Player player : Bukkit.getServer().getOnlinePlayers()){
+                    try {
+                        syncronisation.money(player);
+                    } catch (IOException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }, 20L, 20L);
+
         //Bukkit.getMessenger().registerOutgoingPluginChannel(this, "appleskin:amc");
         //Bukkit.getMessenger().registerIncomingPluginChannel(instance, CHANNEL_NAME, new MessageListener());
 
@@ -82,35 +97,6 @@ public final class Alpha67 extends JavaPlugin implements Listener {
         return econ.bankBalance(uuid.toString()).balance;
 
     }
-
-    private File customConfigFile;
-    private FileConfiguration customConfig;
-
-    public FileConfiguration getCustomConfig() {
-        return this.customConfig;
-    }
-
-
-    private void createCustomConfig() {
-        customConfigFile = new File(getDataFolder(), "custom.yml");
-        if (!customConfigFile.exists()) {
-            customConfigFile.getParentFile().mkdirs();
-            saveResource("custom.yml", false);
-        }
-
-        customConfig = new YamlConfiguration();
-        try {
-            customConfig.load(customConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-
-
 
 
 

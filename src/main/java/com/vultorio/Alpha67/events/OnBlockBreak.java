@@ -8,11 +8,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.vultorio.Alpha67.Alpha67;
+import com.vultorio.Alpha67.utils.Util;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +24,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class OnBlockBreak implements Listener {
 
@@ -29,6 +35,22 @@ public class OnBlockBreak implements Listener {
     {
         Block block = e.getBlock();
         Player player = e.getPlayer();
+
+        System.out.println(block);
+        //String result = String.valueOf(e.getRecipe().getResult());
+        int modLevel = loadData(player);
+        List<String> modList = Util.ModListId();
+        int modNumber = modList.size();
+
+        for(int i = 0; i <= modNumber-1; i++) {
+            String modName = modList.get(i);
+            if (block.toString().contains(modName) && modLevel < i)
+            {
+                e.setCancelled(true);
+                //e.getWhoClicked().closeInventory();
+                Bukkit.broadcastMessage(ChatColor.RED + "Sorry but you can't craft this item, please type /mod to buy autorisation to use this mod");
+            }
+        }
 
         //AureliumAPI.addXp(player, Skills.EXCAVATION, 6000);
 
@@ -125,4 +147,13 @@ public class OnBlockBreak implements Listener {
 
         return ageable.getAge() == maxAge;
     }
+
+
+    public int loadData(Player player) {
+        File file = new File(Alpha67.getInstance().getDataFolder() + "/playerdata/" + player.getUniqueId() + ".yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        return config.getInt("mod-level");
+    }
+
+
 }

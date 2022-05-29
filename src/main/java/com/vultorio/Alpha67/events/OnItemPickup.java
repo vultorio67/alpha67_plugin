@@ -1,36 +1,28 @@
 package com.vultorio.Alpha67.events;
 
-import com.archyx.aureliumskills.api.AureliumAPI;
-import com.archyx.aureliumskills.skills.Skills;
 import com.vultorio.Alpha67.Alpha67;
 import com.vultorio.Alpha67.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import java.io.File;
 import java.util.List;
 
-public class Oncraft implements Listener {
+public class OnItemPickup implements Listener {
 
     @EventHandler
-    public void onCraft(CraftItemEvent e) {
-
-        //Block block = e.getBlock();
-        Player player = (Player) e.getWhoClicked();
-
-        //int FarmingSkill = AureliumAPI.getSkillLevel(player, Skills.FARMING);
-
-        System.out.println(e.getRecipe().getResult());
-        String result = String.valueOf(e.getRecipe().getResult());
+    public void onItemPickup(PlayerPickupItemEvent e)
+    {
+        Player player = e.getPlayer();
+        //System.out.println(e.getRecipe().getResult());
+        //String result = String.valueOf(e.getRecipe().getResult());
+        String result = e.getItem().toString();
         int modLevel = loadData(player);
         List<String> modList = Util.ModListId();
         int modNumber = modList.size();
@@ -40,13 +32,9 @@ public class Oncraft implements Listener {
             if (result.contains(modName) && modLevel < i)
             {
                 e.setCancelled(true);
-                e.getWhoClicked().closeInventory();
-                Bukkit.broadcastMessage(ChatColor.RED + "Sorry but you can't craft this item, please type /mod to buy autorisation to use this mod");
+                Bukkit.broadcastMessage(ChatColor.RED + "Sorry but you can't pickup this item, please type /mod to buy autorisation to use");
             }
         }
-
-
-
     }
 
     public int loadData(Player player) {
@@ -54,5 +42,4 @@ public class Oncraft implements Listener {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         return config.getInt("mod-level");
     }
-
 }
