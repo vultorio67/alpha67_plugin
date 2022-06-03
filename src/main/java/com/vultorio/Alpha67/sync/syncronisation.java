@@ -22,23 +22,19 @@ public static void sync()
 
 
 
-        JSONObject jsonObject = new JSONObject();
+        JSONObject bridgeServer = new JSONObject();
         //Inserting key-value pairs into the json object
-        jsonObject.put("stone", "1");
-        jsonObject.put("First_Name", "Shikhar");
-        jsonObject.put("Last_Name", "Dhawan");
-        jsonObject.put("Date_Of_Birth", "1981-12-05");
-        jsonObject.put("Place_Of_Birth", "Delhi");
-        jsonObject.put("Country", "India");
+        bridgeServer.put("stone", "1");
+
         try {
-            FileWriter file = new FileWriter("output.json");
-            file.write(jsonObject.toJSONString());
+            FileWriter file = new FileWriter("communication-alpha/bridge-Server.json");
+            file.write(bridgeServer.toJSONString());
             file.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("JSON file created: "+jsonObject);
+        System.out.println("JSON file created: "+bridgeServer);
     }
 
 
