@@ -50,6 +50,20 @@ public static void sync()
 
             double vaultMoney = Alpha67.econ.getBalance(player);
 
+            JSONObject bridgeServer = new JSONObject();
+            int i = 100;
+            //Inserting key-value pairs into the json object
+            bridgeServer.put("stone", String.valueOf(i));
+
+            try {
+                FileWriter file = new FileWriter("communication-alpha/bridge-Server.json");
+                file.write(bridgeServer.toJSONString());
+                file.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
 
 
             if (modif) {
