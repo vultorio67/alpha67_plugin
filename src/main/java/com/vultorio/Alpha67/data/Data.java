@@ -12,7 +12,7 @@ public class Data{
 
 
     public static void saveOnLogin(Player player) {
-        File file = new File(Alpha67.getInstance().getDataFolder() + "/playerdata/" + player.getUniqueId() + ".yml");
+         File file = new File(Alpha67.getInstance().getDataFolder() + "/playerdata/" + player.getUniqueId() + ".yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         config.set("uuid", player.getUniqueId().toString());
         config.set("player-name", player.getPlayer().getName());
@@ -21,6 +21,7 @@ public class Data{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void saveModLevel(Player player,int modLevel) {

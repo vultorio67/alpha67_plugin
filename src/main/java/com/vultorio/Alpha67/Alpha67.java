@@ -1,7 +1,6 @@
 package com.vultorio.Alpha67;
 
 import com.vultorio.Alpha67.commands.modMenu;
-import com.vultorio.Alpha67.data.serverData;
 import com.vultorio.Alpha67.events.*;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -17,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 import com.vultorio.Alpha67.sync.syncronisation;
@@ -37,6 +35,9 @@ public final class Alpha67 extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
 
+        //garder en haut
+        instance = this;
+
         //serverData.saveServerData();
         syncronisation.sync();
 
@@ -49,24 +50,25 @@ public final class Alpha67 extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        setupPermissions();
-        setupChat();
+        //setupPermissions();
+       // setupChat();
 
         createFiles();
 
-
-
-
-        instance = this;
         getServer().getPluginManager().registerEvents(new OnBlockBreak(), instance);
         getServer().getPluginManager().registerEvents(new Oncraft(), instance);
         getServer().getPluginManager().registerEvents(new OnPlayerConnect(), instance);
         getServer().getPluginManager().registerEvents(new OnItemPickup(), instance);
         getServer().getPluginManager().registerEvents(new OnBlockPlace(), instance);
         getCommand("mod").setExecutor(new modMenu());
+        System.out.println("Le plugin Alpha67 c'est bien lancé.");
+
 
         getServer().getScheduler().scheduleSyncRepeatingTask(instance, new Runnable(){
             public void run() {
+
+                syncronisation.sync();
+                System.out.println("stone sync");
 
                 for(Player player : Bukkit.getServer().getOnlinePlayers()){
                     try {
@@ -78,6 +80,8 @@ public final class Alpha67 extends JavaPlugin implements Listener {
             }
 
         }, 20L, 20L);
+
+
 
         //Bukkit.getMessenger().registerOutgoingPluginChannel(this, "appleskin:amc");
         //Bukkit.getMessenger().registerIncomingPluginChannel(instance, CHANNEL_NAME, new MessageListener());
@@ -116,7 +120,7 @@ public final class Alpha67 extends JavaPlugin implements Listener {
         return econ != null;
     }
 
-    private boolean setupChat() {
+   /* private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
         chat = rsp.getProvider();
         return chat != null;
@@ -126,7 +130,7 @@ public final class Alpha67 extends JavaPlugin implements Listener {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
         return perms != null;
-    }
+    }*/
 
 
 

@@ -1,13 +1,7 @@
 package com.vultorio.Alpha67.events;
 
-import com.archyx.aureliumskills.api.AureliumAPI;
-import com.archyx.aureliumskills.skills.Skills;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import com.vultorio.Alpha67.Alpha67;
+import com.vultorio.Alpha67.market.PriceCalculator;
 import com.vultorio.Alpha67.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class OnBlockBreak implements Listener {
@@ -35,6 +28,11 @@ public class OnBlockBreak implements Listener {
     {
         Block block = e.getBlock();
         Player player = e.getPlayer();
+
+      //  System.out.println(stonePriceCalculator.calculatePrice());
+
+        System.out.println( Alpha67.econ.getBalance(player));
+        System.out.println(PriceCalculator.calculateStonePrice());
 
         System.out.println(block);
         //String result = String.valueOf(e.getRecipe().getResult());
