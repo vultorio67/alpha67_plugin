@@ -28,7 +28,6 @@ public class OnPlayerConnect implements Listener {
         Player player = ev.getPlayer();
 
         Data.saveOnLogin(player);
-        syncronisation.saveServerData();
 
         try {
             syncronisation.money(player);

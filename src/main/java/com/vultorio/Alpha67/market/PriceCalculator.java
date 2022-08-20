@@ -1,5 +1,6 @@
 package com.vultorio.Alpha67.market;
 
+import com.vultorio.Alpha67.sync.getCount;
 import com.vultorio.Alpha67.sync.syncronisation;
 
 public class PriceCalculator {
@@ -16,31 +17,26 @@ public class PriceCalculator {
 
         long currentTimeCa = (long) ((System.currentTimeMillis() - timeC));
         currentTimeCa = (long) (currentTimeCa+1);
-        int a = 100000; //coef
+        int a = (int) (50 + getCount.getCount("stone")); //coef
 
-        float b = 1200; //coef
+        float b = 1200; //time in second
         float startTime = (float) (b/1.2);
 
         b = b*65;
 
         //max value
-        int c = 100;
+        double c = getMaxStone();
 
         float min = 0.0F;
         float max = 1.2F;
         double random = min + Math.random() * (max - min);
 
-        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getStone(0)));
-
-        System.out.println("currentTime: "+currentStoneTime);
+        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getTime(0)));
 
         currentStoneTime = (long) (currentStoneTime+startTime);
 
         defalutSellPrice = (float) ((-a*2)*(1.1*(1-(1/Math.exp(currentStoneTime/b))-(1-(1/Math.exp(currentStoneTime/2/b)))))+c);
         defaultBuyPrice = (float) (defalutSellPrice*1.2);
-        System.out.println("sell: "+ defalutSellPrice);
-
-        System.out.println(currentStoneTime);
 
         return defalutSellPrice;
     }
@@ -58,31 +54,28 @@ public class PriceCalculator {
 
         long currentTimeCa = (long) ((System.currentTimeMillis() - timeC));
         currentTimeCa = (long) (currentTimeCa+1);
-        int a = 100000; //coef
+        int a = (int) (50 + getCount.getCount("wood")); //coef
 
-        float b = 1200; //coef
+        float b = 1200; //time in second
         float startTime = (float) (b/1.2);
 
         b = b*65;
 
         //max value
-        int c = 200;
+        double c = getMaxWood();
+
 
         float min = 0.0F;
         float max = 1.2F;
         double random = min + Math.random() * (max - min);
 
-        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getStone(1)));
+        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getTime(1)));
 
-        System.out.println("currentTime: "+currentStoneTime);
 
         currentStoneTime = (long) (currentStoneTime+startTime);
 
         defalutSellPrice = (float) ((-a*2)*(1.1*(1-(1/Math.exp(currentStoneTime/b))-(1-(1/Math.exp(currentStoneTime/2/b)))))+c);
         defaultBuyPrice = (float) (defalutSellPrice*1.2);
-        System.out.println("sell: "+ defalutSellPrice);
-
-        System.out.println(currentStoneTime);
 
         return defalutSellPrice;
     }
@@ -100,31 +93,27 @@ public class PriceCalculator {
 
         long currentTimeCa = (long) ((System.currentTimeMillis() - timeC));
         currentTimeCa = (long) (currentTimeCa+1);
-        int a = 100000; //coef
+        int a = (int) (50 + getCount.getCount("gold")); //coef
 
-        float b = 1200; //coef
+        float b = 1200; //time in second
         float startTime = (float) (b/1.2);
 
         b = b*65;
 
         //max value
-        int c = 2000;
+        double c = getMaxGold();
 
         float min = 0.0F;
         float max = 1.2F;
         double random = min + Math.random() * (max - min);
 
-        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getStone(2)));
+        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getTime(2)));
 
-        System.out.println("currentTime: "+currentStoneTime);
 
         currentStoneTime = (long) (currentStoneTime+startTime);
 
         defalutSellPrice = (float) ((-a*2)*(1.1*(1-(1/Math.exp(currentStoneTime/b))-(1-(1/Math.exp(currentStoneTime/2/b)))))+c);
         defaultBuyPrice = (float) (defalutSellPrice*1.2);
-        System.out.println("sell: "+ defalutSellPrice);
-
-        System.out.println(currentStoneTime);
 
         return defalutSellPrice;
     }
@@ -142,34 +131,49 @@ public class PriceCalculator {
 
         long currentTimeCa = (long) ((System.currentTimeMillis() - timeC));
         currentTimeCa = (long) (currentTimeCa+1);
-        int a = 100000; //coef
+        int a = (int) (50 + getCount.getCount("diamond")); //coef
 
-        float b = 1200; //coef
+        float b = 1200; //time in second
         float startTime = (float) (b/1.2);
 
         b = b*65;
 
         //max value
-        int c = 20000;
+        double c = getMaxDiamond();
 
         float min = 0.0F;
         float max = 1.2F;
         double random = min + Math.random() * (max - min);
 
-        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getStone(3)));
+        long currentStoneTime = (long) ((System.currentTimeMillis() - syncronisation.getTime(3)));
 
-        System.out.println("currentTime: "+currentStoneTime);
 
         currentStoneTime = (long) (currentStoneTime+startTime);
 
         defalutSellPrice = (float) ((-a*2)*(1.1*(1-(1/Math.exp(currentStoneTime/b))-(1-(1/Math.exp(currentStoneTime/2/b)))))+c);
         defaultBuyPrice = (float) (defalutSellPrice*1.2);
-        System.out.println("sell: "+ defalutSellPrice);
-
-        System.out.println(currentStoneTime);
 
         return defalutSellPrice;
     }
+
+    public static double getMaxStone()
+    {
+        return 50 + getCount.getCount("stone");
+    }
+    public static double getMaxWood()
+    {
+        return (50 + getCount.getCount("wood"))*4;
+    }
+    public static double getMaxGold()
+    {
+        return (50 + getCount.getCount("gold"))*10;
+    }
+    public static double getMaxDiamond()
+    {
+        return (50 + getCount.getCount("diamond"))*30;
+    }
+
+
 
 
 }

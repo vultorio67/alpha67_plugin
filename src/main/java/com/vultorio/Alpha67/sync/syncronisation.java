@@ -2,6 +2,8 @@ package com.vultorio.Alpha67.sync;
 
 import com.vultorio.Alpha67.Alpha67;
 import com.vultorio.Alpha67.market.PriceCalculator;
+import me.codedred.playtimes.api.TimelessPlayer;
+import me.codedred.playtimes.api.TimelessServer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,7 +43,7 @@ public final class syncronisation {
 
     }
 
-    public static long getStone(int id)
+    public static long getTime(int id)
     {
         File file = new File(Alpha67.getInstance().getDataFolder() + "/server-data.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -88,6 +90,12 @@ public final class syncronisation {
 
 
     public static void money(Player player) throws IOException, ParseException {
+
+        TimelessPlayer playerTime = new TimelessPlayer(player);
+        TimelessServer server = new TimelessServer();
+
+        System.out.println("moooo");
+
         try {
 
             Object ob = new JSONParser().parse(new FileReader("communication-alpha/playerData/"+player.getUniqueId()+".json"));
@@ -98,10 +106,24 @@ public final class syncronisation {
             double money = (double) js.get("money");
 
             double vaultMoney = Alpha67.econ.getBalance(player);
+/*
+            try {
+                int stone = (int) js.get("stone");
+                int wood = (int) js.get("wood");
+                int gold = (int) js.get("gold");
+                int diamond = (int) js.get("diamond");
+
+                System.out.println(wood);
+
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }*/
 
 
 
             if (modif) {
+                System.out.println("money change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + money + "::::::" + vaultMoney);
 
                 if (money < vaultMoney) {
 
@@ -129,12 +151,13 @@ public final class syncronisation {
                     file.close();
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   // e.printStackTrace();
                 }
 
 
             } else if(money != vaultMoney){
                 JSONObject jsonObject = new JSONObject();
+                System.out.println("money changeegegegegegeg");
                 //Inserting key-value pairs into the json object
                 jsonObject.put("money", Alpha67.econ.getBalance(player));
                 jsonObject.put("modification", modif);
@@ -144,22 +167,24 @@ public final class syncronisation {
                     file.close();
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   // e.printStackTrace();
                 }
             }
 
         } catch(Exception e) {
+
             JSONObject jsonObject = new JSONObject();
             //Inserting key-value pairs into the json object
             jsonObject.put("money", Alpha67.econ.getBalance(player));
             jsonObject.put("modification", false);
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             try {
                 FileWriter file = new FileWriter("communication-alpha/playerData/" + player.getUniqueId() + ".json");
                 file.write(jsonObject.toJSONString());
                 file.close();
 
             } catch (IOException er) {
-                er.printStackTrace();
+                //er.printStackTrace();
             }
         }
 
@@ -174,7 +199,10 @@ public final class syncronisation {
         float woodPrice = PriceCalculator.calculateWoodPrice();
         float goldPrice = PriceCalculator.calculateGoldPrice();
         float diamondPrice = PriceCalculator.calculateDiamondPrice();
-        float stoneMax = (float) 150.15;
+
+
+
+
 
         JSONObject bridgeServers = new JSONObject();
         //Inserting key-value pairs into the json object
@@ -183,12 +211,13 @@ public final class syncronisation {
         bridgeServers.put("GoldPrice", goldPrice);
         bridgeServers.put("DiamondPrice", diamondPrice);
 
-        bridgeServers.put("StoneMax", stoneMax);
-        bridgeServers.put("WoodMax", stoneMax);
-        bridgeServers.put("GoldMax", stoneMax);
-        bridgeServers.put("DiamondMax", stoneMax);
+        bridgeServers.put("StoneMax", PriceCalculator.getMaxStone());
+        bridgeServers.put("WoodMax", PriceCalculator.getMaxWood());
+        bridgeServers.put("GoldMax", PriceCalculator.getMaxGold());
+        bridgeServers.put("DiamondMax", PriceCalculator.getMaxDiamond());
         try {
-            FileWriter file = new FileWriter("communication-alpha/bridge-Server.json");
+            System.out.println(stonePrice+"!"+woodPrice+"!"+goldPrice+"!"+diamondPrice);
+            FileWriter file = new FileWriter("communication-alpha/bridge-server-.json");
             System.out.println("save");
             file.write(bridgeServers.toJSONString());
             file.close();
@@ -198,8 +227,100 @@ public final class syncronisation {
         }
 
 
+        if (getStoneR() >= 1)
+        {
+            long time = System.currentTimeMillis() - syncronisation.getTime(0);
+
+            int timec = (int) ((time/100)*getStoneR());
+
+            File file = new File(Alpha67.getInstance().getDataFolder() + "/server-data.yml");
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            System.out.println("ancien = "+syncronisation.getTime(0)+ "new = "+ syncronisation.getTime(0)+timec);
+
+            config.set("timeStone", syncronisation.getTime(0)+timec);
+
+            System.out.println("save data");
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("stoneR", 0);
+            try {
+                FileWriter files = new FileWriter("communication-alpha/count.json");
+                files.write(jsonObject.toJSONString());
+                files.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+    }
+
+
+    private static double getStoneR()
+    {
+        try {
+            Object ob = new JSONParser().parse(new FileReader("communication-alpha/count.json"));
+            JSONObject js = (JSONObject) ob;
+            double stone = (double) js.get("stoneR");
+            return stone;
+        } catch (Exception e)
+        {
+            double stone = 0;
+            return stone;
+        }
+    }
+
+    private static double getWoodR()
+    {
+        try {
+            Object ob = new JSONParser().parse(new FileReader("communication-alpha/count.json"));
+            JSONObject js = (JSONObject) ob;
+            double stone = (double) js.get("woodR");
+            return stone;
+        } catch (Exception e)
+        {
+            double stone = 0;
+            return stone;
+        }
+    }
+
+    private static double getGoldR()
+    {
+        try {
+            Object ob = new JSONParser().parse(new FileReader("communication-alpha/count.json"));
+            JSONObject js = (JSONObject) ob;
+            double stone = (double) js.get("goldR");
+            return stone;
+        } catch (Exception e)
+        {
+            double stone = 0;
+            return stone;
+        }
+    }
+
+    private static double getDiamondR()
+    {
+        try {
+            Object ob = new JSONParser().parse(new FileReader("communication-alpha/count.json"));
+            JSONObject js = (JSONObject) ob;
+            double stone = (double) js.get("diamondR");
+            return stone;
+        } catch (Exception e)
+        {
+            double stone = 0;
+            return stone;
+        }
     }
 
 

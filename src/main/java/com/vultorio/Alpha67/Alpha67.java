@@ -2,6 +2,7 @@ package com.vultorio.Alpha67;
 
 import com.vultorio.Alpha67.commands.modMenu;
 import com.vultorio.Alpha67.events.*;
+import com.vultorio.Alpha67.sync.getCount;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -15,10 +16,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
 import com.vultorio.Alpha67.sync.syncronisation;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 
@@ -34,11 +37,33 @@ public final class Alpha67 extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
         //garder en haut
         instance = this;
 
+        System.out.println("cacacacacacacacacacacacacacacac");
+
+        File directory = new File("communication-alpha");
+        boolean res = directory.mkdir();
+
+        if(res) {
+            System.out.println("The directory has been created.");
+        }
+        else {
+            System.out.println("The directory already exists.");
+        }
+
+        File directory2 = new File("communication-alpha/playerData");
+        boolean res2 = directory2.mkdir();
+
+        if(res2) {
+            System.out.println("The directory has been created.");
+        }
+        else {
+            System.out.println("The directory already exists.");
+        }
+
         //serverData.saveServerData();
+        syncronisation.saveServerData();
         syncronisation.sync();
 
         //new Data(Alpha67.getPlugin(Alpha67.class), "ohai.yml").set("one", "ThreadLocalRandom().current().nextInt()").set("two", "ThreadLocalRandom().current().nextInt()").set("three", "ThreadLocalRandom().current().nextInt()").set("four", "I am you're father").set("five", "You*re").save();
@@ -68,7 +93,7 @@ public final class Alpha67 extends JavaPlugin implements Listener {
             public void run() {
 
                 syncronisation.sync();
-                System.out.println("stone sync");
+                getCount.manageCount();
 
                 for(Player player : Bukkit.getServer().getOnlinePlayers()){
                     try {
